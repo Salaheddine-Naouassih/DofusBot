@@ -48,6 +48,8 @@ def ScreenShot_Starting_Pos():
 def Parse_Pos(text):
     # parse posizione with delimiter , and convert to int X and Y
     pos = pytesseract.image_to_string(Image.open(text))
+    print('posizione: ', pos)
+    #create a loop to keep taking screenshots 
     # delimit from , to get X and Y
     posX = pos.split(",", 1)[0]
     posY = pos.split(",", 1)[1]
@@ -94,14 +96,22 @@ def Get_Hint(i):
     # get hint
     pyautogui.moveTo(79, 230+30*i)
     hint_name = 'hint'+str(i)+'.png'
-    pyautogui.screenshot(hint_name, region=(27, 153+30*i, 356, 60))
+    pyautogui.screenshot(hint_name, region=(27, 153+30*i, 360, 60))
     time.sleep(0.20)
 
 
 def Parse_Hint(i):
     # parse hint
     hint_name = 'hint'+str(i)+'.png'
-    hint = pytesseract.image_to_string(Image.open(hint_name))
+    # parse hint with psm option 6 
+
+    hint = pytesseract.image_to_string(Image.open(hint_name), config='--psm 6')
+    #strip hint from {, }, [, ], (, ), <, >, /, \, |, ~, `, !, @, #, $, %, ^, &, *, -, _, +, =, :, ;, ", ', ?, ., ,, 
+    #do it in a loop 
+    for char in hint:
+        if char in ['{', '}','(', ')', '<', '>', '/', '\\', '|', '~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '-', '_', '+', '=', ':', ';', '"', '?', '.', ',']:
+            hint = hint.replace(char, '')
+ 
     print('hint: ', hint)
     # parse hint for nord/est/ouest/sud
     if 'nord' in hint:
@@ -168,8 +178,8 @@ def Look_For_Hint(posX, posY, direction, element):
     pyautogui.moveTo(1055, 675)
     pyautogui.click()
     Elem= str(element)
-    print('ELEEEEM:',Elem)
-    pyautogui.write(Elem)
+    pyperclip.copy(Elem)
+    pyautogui.hotkey('ctrl', 'v')
     #copy Elem into paper clip 
     pyperclip.copy(Elem)
     checkelem=pyperclip.paste()
@@ -198,13 +208,13 @@ def get_pos():
     return coox1, cooy1
 
 def get_starting_pos():
-    pyautogui.screenshot('starting_pos.png', region=(111, 196, 51, 16))
+    pyautogui.screenshot('starting_pos.png', region=(107, 193, 55, 19))
     time.sleep(0.25)
     temp=Parse_Pos('starting_pos.png')
     return temp
 
 def get_current_pos():
-    pyautogui.screenshot('current_pos.png', region=(18, 76, 73, 25))
+    pyautogui.screenshot('current_pos.png', region=(16, 76, 78, 28))
     time.sleep(0.65)
     temp= Parse_current_pos()    
     return temp
@@ -257,11 +267,6 @@ for i in range(0, 5):
                 continue
     Look_For_Hint(posX, posY, direction, element)
     posX, posY = get_pos()
-
-        #threshhold an image to get only white characters
-
- 
-   
 
     current_pos = get_current_pos()
     destination=get_pos()
