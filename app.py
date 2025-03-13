@@ -6,47 +6,49 @@ import keyboard
 import pyperclip
 from PIL import Image
 
+import requests
+import scapy.all as scapy
+
 import pytesseract
+from gethints import * 
+
 global direction, element
 
 pos = [[1125, 1053], [92, 16], [701, 322], [1042, 325]]
 
-
+#AJUSTER Dofus_X et Dofus_Y pour ouvrir DOFUS depuis la barre de taches
 def Open_Dofus():
-    # OPENS DOFUS
-    # OPEN DOFUS LIKE ORDRE.PNG or change X and Y, use bott.py to find X and Y
     Dofus_X = 1184
     Dofus_Y = 1051
     pyautogui.moveTo(Dofus_X, Dofus_Y)
     pyautogui.click()
     time.sleep(0.25)
 
-
+#AJUSTER Chrome_X et Chrome_Y pour ouvrir CHROME depuis la barre de taches
 def Open_Chrome():
-    # OPENS CHROME
-    # OPEN CHROME LIKE ORDRE.PNG or change X and Y, use bott.py to find X and Y
     Chrome_X = 1125
     Chrome_Y = 1053
     pyautogui.moveTo(Chrome_X, Chrome_Y)
     pyautogui.click()
     time.sleep(0.25)
 
-
+#AJUSTER X et Y pour match position de l'onglet dofusbook chasse au tresor
 def Open_Chasse():
-    # move cursor to chasse tab
-    pyautogui.moveTo(92, 16)
+    X=92
+    Y=16
+    pyautogui.moveTo(X, Y)
     time.sleep(0.25)
     pyautogui.click()
 
-
+#AJUSTER les coordonees de region pour screen la pos en haut a gauche de l'ecran 
 def ScreenShot_Starting_Pos():
-    # SCREENSHOTS POS
     pyautogui.screenshot('starting_pos.png', region=(111, 196, 51, 16))
     time.sleep(0.25)
 
 
+#extrait la la position de votre charactere en jeu depuis le screenshot 
 def Parse_Pos(text):
-    # parse posizione with delimiter , and convert to int X and Y
+    # parse position with delimiter , and convert to int X and Y
     pos = pytesseract.image_to_string(Image.open(text))
     print('posizione: ', pos)
     #create a loop to keep taking screenshots 
@@ -56,14 +58,15 @@ def Parse_Pos(text):
     # remove [ and ] from the string
     posX = posX.replace('[', '')
     posY = posY.replace(']', '')
-    print('posizione X: ', posX)
-    print('posizione Y: ', posY)
+    print('pos X: ', posX)
+    print('pos Y: ', posY)
     return posX, posY
 
 
+#on colle les pos sur les inputs de dofusbook chasse au tresor
 def Paste_Pos(posX, posY):
     # move cursor to pos X
-    pyautogui.moveTo(701, 322)
+    pyautogui.moveTo(701, 322)#ici
     time.sleep(0.25)
     pyautogui.click()
     #clear input
@@ -73,7 +76,7 @@ def Paste_Pos(posX, posY):
     pyautogui.write(str(posX))
     time.sleep(0.1)
     # move cursor to pos Y
-    pyautogui.moveTo(1042, 325)
+    pyautogui.moveTo(1042, 325)#ici
     time.sleep(0.25)
     pyautogui.click()
     #clear input
@@ -86,12 +89,13 @@ def Paste_Pos(posX, posY):
     # move to deadpoint
 
 
+#j'ai oublier pk mais ca avait une utilite
 def Move_To_DeadPoint():
     pyautogui.moveTo(539, 16)
     time.sleep(0.25)
     pyautogui.click()
 
-
+#on bouge la souris pour hover sur l'UI de chasse au tresor en jeu pour screenshot le text, ajuster les coordonnees de region 
 def Get_Hint(i):
     # get hint
     pyautogui.moveTo(79, 230+30*i)
