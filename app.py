@@ -32,7 +32,7 @@ def Open_Chrome():
     pyautogui.click()
     time.sleep(0.25)
 
-#AJUSTER X et Y pour match position de l'onglet dofusbook chasse au tresor
+#AJUSTER X et Y pour match position de l'onglet dofusdb chasse au tresor
 def Open_Chasse():
     X=92
     Y=16
@@ -63,7 +63,7 @@ def Parse_Pos(text):
     return posX, posY
 
 
-#on colle les pos sur les inputs de dofusbook chasse au tresor
+#on colle les pos sur les inputs de dofusdb chasse au tresor
 def Paste_Pos(posX, posY):
     # move cursor to pos X
     pyautogui.moveTo(701, 322)#ici
@@ -104,6 +104,7 @@ def Get_Hint(i):
     time.sleep(0.20)
 
 
+#ca parse les indices depuis le screenshot 
 def Parse_Hint(i):
     # parse hint
     hint_name = 'hint'+str(i)+'.png'
@@ -147,6 +148,7 @@ def move_to_chasse_deadpoint():
     time.sleep(0.25)
     pyautogui.click()
 
+#vaut mieux utiliser les fonctions dans gethints.py
 def Look_For_Hint(posX, posY, direction, element):
     Open_Chrome()
     Open_Chasse()
